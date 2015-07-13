@@ -1,4 +1,4 @@
-module Main where
+module Example where
 
 {- Sketch/idea of how one might bring getUserMedia into Elm
 -} 
