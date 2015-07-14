@@ -5,24 +5,44 @@ Elm.Native.UserMedia.make = function(elm) {
 
     if (elm.Native.UserMedia.values) return elm.Native.UserMedia.values;
 
-    navigator.mediaDevices = navigator.mediaDevices || ((navigator.mozGetUserMedia || navigator.webkitGetUserMedia) ? {
-        getUserMedia: function(c) {
-            return new Promise(function(y, n) {
-                (navigator.mozGetUserMedia ||
-                 navigator.webkitGetUserMedia).call(navigator, c, y, n);
-            });
-        }
-    } : null);
+    var Task = Elm.Native.Task.make(elm);
+    var Utils = Elm.Native.Utils.make(elm);
 
-    if (!navigator.mediaDevices) {
-        console.log("getUserMedia() not supported.");
+    navigator.getUserMedia = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia;
 
-        // TODO: how should this be handled idiomatically in Elm?
+    if (!navigator.getUserMedia) {
+        console.log("getUserMedia not supported.");
+
+        // how to handle this idiomatically in Elm?
         return;
     }
     
-    var values = {};
-    values.getUserMedia = F3(navigator.mediaDevices.getUserMedia);
+    function getUserMediaWrapper(options, callback) {
+        return Task.asyncFunction(function() { // <- function should take an argument? 
+            navigator.getUserMedia(options, function(stream) {
+
+                // this part doesn't feel quite right
+                Task.succeed(Utils.Tuple0);
+                console.log("success");
+                callback(stream);
+
+                // if I did instead:
+                // callback(Task.succeed(stream))
+                // then I'd have
+                // getUserMedia : Task x MediaStream ? 
+
+            }, function(error) {
+                console.log("failure");
+                Task.fail(error);
+            });
+        });
+    };
+
+    var values = {
+        getUserMedia: F2(getUserMediaWrapper)
+    };
 
     return Elm.Native.UserMedia.values = values;
 }
