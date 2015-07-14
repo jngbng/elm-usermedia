@@ -1,40 +1,25 @@
-module Example where
-
 {- Sketch/idea of how one might bring getUserMedia into Elm
+
+   This doesn't work as I expect it to; it prompts the user for access to
+   the microphone (as desired), but it seems to me that the stream isn't
+   being forwarded to the userMediaStream mailbox (since the view isn't
+   updating)
 -} 
 
-import StartApp
-import UserMedia
-import Window
-import Html exposing (..)
-import Signal exposing (..)
-import Html.Events exposing (onClick)
+import UserMedia exposing (MediaStream, getUserMedia, userMediaStream)
+import Html exposing (text, div)
+import Task exposing (Task)
+import Signal exposing ((<~))
+
+view model =
+    case model of
+        Nothing -> div [] [ text "Nothing" ]
+        Just _ -> div [] [ text "Got user media" ]
+
+port getUserMedia' : Task x ()
+port getUserMedia' =
+    getUserMedia { audio=True, video=False }
 
 
 main =
-    StartApp.start { model = model, view = view, update = update }
-
-
-type alias Model
-        = Maybe UserMedia.MediaStream
-
-{- Nothing if user denies microphone access, update to
-   Just UserMedia.MediaStream if access is granted.
--}
-model = Nothing
-
-
-view : Address action -> model -> Html
-view address model =
-    div [] []
-
-type Action = Init
-
-update : Action -> Model -> Model
-update _ model = 
-    case model of
-        Nothing -> tryGetMicrophone
-        m -> m
-
-tryGetMicrophone =
-    UserMedia.getUserMedia {audio=True,video=False} (Just) (\_ -> Nothing)
+    view <~ userMediaStream.signal
