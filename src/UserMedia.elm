@@ -2,7 +2,6 @@ module UserMedia where
 
 import Signal as S
 import Task as T
-import Debug exposing (log)
 import Native.UserMedia
 
 
