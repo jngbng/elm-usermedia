@@ -27,14 +27,11 @@ type alias MediaStreamError = {}
     options given and forwards the stream to the mailbox userMediaStream.
 
     example:
-        port getUserMedia' = getUserMedia { audio=True, video=False }
+        userMedia : S.Mailbox (Maybe MediaStream)
+        userMedia = S.mailbox Nothing
+        port getUserMedia = requestUserMedia userMedia.address { audio=True, video=False }
 -}
-getUserMedia : Options -> T.Task x ()
-getUserMedia options =
-    let callback stream = S.send userMediaStream.address (Just stream)
-    in
-        Native.UserMedia.getUserMedia options callback
-
-userMediaStream : S.Mailbox (Maybe MediaStream)
-userMediaStream =
-    S.mailbox Nothing
+requestUserMedia : S.Address (Maybe MediaStream) -> Options -> T.Task x ()
+requestUserMedia address options =
+    T.toMaybe (Native.UserMedia.getUserMedia options)
+        `T.andThen` S.send address 

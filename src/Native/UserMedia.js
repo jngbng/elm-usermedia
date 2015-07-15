@@ -19,29 +19,18 @@ Elm.Native.UserMedia.make = function(elm) {
         return;
     }
     
-    function getUserMediaWrapper(options, callback) {
-        return Task.asyncFunction(function() { // <- function should take an argument? 
+    function getUserMediaWrapper(options) {
+        return Task.asyncFunction(function(callback) {
             navigator.getUserMedia(options, function(stream) {
-
-                // this part doesn't feel quite right
-                Task.succeed(Utils.Tuple0);
-                console.log("success");
-                callback(stream);
-
-                // if I did instead:
-                // callback(Task.succeed(stream))
-                // then I'd have
-                // getUserMedia : Task x MediaStream ? 
-
+                callback(Task.succeed(stream))
             }, function(error) {
-                console.log("failure");
-                Task.fail(error);
+                callback(Task.fail(error));
             });
         });
     };
 
     var values = {
-        getUserMedia: F2(getUserMediaWrapper)
+        getUserMedia: getUserMediaWrapper
     };
 
     return Elm.Native.UserMedia.values = values;
