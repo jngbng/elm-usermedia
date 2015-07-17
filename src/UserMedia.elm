@@ -18,7 +18,13 @@ type alias Options
 {-| todo: implement
    http://w3c.github.io/mediacapture-main/getusermedia.html#idl-def-MediaStream
 -}
-type alias MediaStream = {}
+type alias MediaStream =
+    { active:Signal Bool
+    , ended:Signal Bool
+    , label:String
+    , id:String
+    }
+
 type alias MediaStreamError = {}
 
 
