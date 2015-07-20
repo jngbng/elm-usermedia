@@ -5,6 +5,7 @@ import UserMedia exposing (Stream, requestUserMedia)
 import Html exposing (text, div)
 import Task exposing (Task)
 import Signal as S exposing ((<~))
+import Either exposing (..)
 
 view model =
     case model of
@@ -17,7 +18,7 @@ userMediaStream =
 
 port getUserMedia : Task x ()
 port getUserMedia =
-    let options = { audio=True, video=False }
+    let options = { audio=Left True, video=Left False }
     in
         requestUserMedia userMediaStream.address options
 
