@@ -1,7 +1,7 @@
 {- Sketch/idea of how one might bring getUserMedia into Elm
 -} 
 
-import UserMedia exposing (MediaStream, requestUserMedia)
+import UserMedia exposing (Stream, requestUserMedia)
 import Html exposing (text, div)
 import Task exposing (Task)
 import Signal as S exposing ((<~))
@@ -11,7 +11,7 @@ view model =
         Nothing -> div [] [ text "Nothing" ]
         Just _ -> div [] [ text "Got user media" ]
 
-userMediaStream : S.Mailbox (Maybe MediaStream)
+userMediaStream : S.Mailbox (Maybe Stream)
 userMediaStream =
     S.mailbox Nothing
 

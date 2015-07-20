@@ -29,8 +29,40 @@ Elm.Native.UserMedia.make = function(elm) {
         });
     };
 
+    function getTracks(stream) {
+        return stream.getTracks();
+    }
+
+    function getTrackKind(track) {
+        switch (track.kind) {
+            case "audio":
+                return elm.UserMedia.values.Audio;
+            case "video":
+                return elm.UserMedia.values.Video;
+        }
+    }
+
+    function getTrackState(track) {
+        switch (track.readyState) {
+            case "live":
+                return elm.UserMedia.values.Live;
+            case "ended":
+                return elm.UserMedia.values.Ended;
+        }
+    }
+
+    function removeTrack(stream, track) {
+        track.stop();
+        stream.removeTrack(track);
+        return stream;
+    }
+
     var values = {
-        getUserMedia: getUserMediaWrapper
+        getUserMedia: getUserMediaWrapper,
+        getTracks: getTracks,
+        getMediaStreamTrackKind: getTrackKind,
+        getMediaStreamTrackState: getTrackState,
+        removeTrack: F2(removeTrack)
     };
 
     return Elm.Native.UserMedia.values = values;
