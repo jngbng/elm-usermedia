@@ -1,5 +1,12 @@
 module UserMedia where
 
+{-| An interface for navigator.getUserMedia
+
+# Definition
+@docs Options, MediaStream, MediaStreamError, requestUserMedia
+
+-}
+
 import Signal as S
 import Task as T
 import Native.UserMedia
@@ -7,7 +14,7 @@ import Native.UserMedia
 
 {-| Should actually be something like:
 
-        audio:Either Bool MediaTrackConstraint, video:Either Boold MediaTrackConstraint
+        audio:Either Bool MediaTrackConstraint, video:Either Bool MediaTrackConstraint
 
    (http://w3c.github.io/mediacapture-main/getusermedia.html#mediastreamconstraints)
 -}
@@ -25,6 +32,8 @@ type alias MediaStream =
     , id:String
     }
 
+{-| MediaStream error type. Not implemented
+-}
 type alias MediaStreamError = {}
 
 

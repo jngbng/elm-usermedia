@@ -4,7 +4,8 @@
     "repository": "https://github.com/giraj/elm-usermedia.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "src",
+        "examples"
     ],
     "exposed-modules": [
         "UserMedia"
